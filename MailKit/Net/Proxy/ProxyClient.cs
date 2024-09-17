@@ -27,9 +27,14 @@
 using System;
 using System.IO;
 using System.Net;
+#if NET8_0_OR_GREATER
+using System.Net.Http;
+#endif
 using System.Threading;
 using System.Net.Sockets;
 using System.Threading.Tasks;
+
+using Org.BouncyCastle.Security;
 
 namespace MailKit.Net.Proxy
 {
@@ -45,6 +50,16 @@ namespace MailKit.Net.Proxy
 	/// </example>
 	public abstract class ProxyClient : IProxyClient
 	{
+
+#if NET6_0_OR_GREATER
+#nullable enable
+		public static IProxyClient DefaultProxy => _systemProxy ??= new SystemProxy ();
+
+		private static SystemProxy? _systemProxy;
+		
+#nullable disable
+#endif
+		
 		/// <summary>
 		/// Initializes a new instance of the <see cref="T:MailKit.Net.Proxy.ProxyClient"/> class.
 		/// </summary>
